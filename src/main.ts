@@ -4,7 +4,7 @@ import { Grid } from "./grid.ts";
 
 // Theme toggle
 {
-  const root = document.querySelector("html");
+  const root = document.querySelector("html")!;
   let newTheme = "light";
 
   const localTheme = localStorage.getItem("theme");
@@ -17,7 +17,7 @@ import { Grid } from "./grid.ts";
     newTheme = localTheme;
   }
   root.setAttribute("data-theme", newTheme);
-  document.getElementById("theme-toggle").addEventListener("click", () => {
+  document.getElementById("theme-toggle")!.addEventListener("click", () => {
     const oldTheme = root.getAttribute("data-theme");
     const newTheme = oldTheme === "dark" ? "light" : "dark";
     root.setAttribute("data-theme", newTheme);
