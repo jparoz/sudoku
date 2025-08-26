@@ -36,22 +36,6 @@ body {
   min-height: 100vh;
 }
 
-.header {
-  display: flex;
-  flex-direction: row;
-  place-items: start;
-  margin: 8px;
-  gap: 8px;
-}
-
-.header button:last-child {
-  margin-left: auto;
-}
-
-.game {
-  place-items: center;
-}
-
 button {
   color: var(--text);
   background-color: var(--secondary);
@@ -68,6 +52,36 @@ button:hover {
   border-color: var(--primary);
 }
 
+.header {
+  display: flex;
+  flex-direction: row;
+  place-items: start;
+  margin: 8px;
+  gap: 8px;
+}
+
+.header button:last-child {
+  margin-left: auto;
+}
+
+.game {
+  display: flex;
+  flex: 1;
+  place-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.grid {
+  display: grid;
+  width: auto;
+  height: auto;
+}
+
+.grid .cell {
+  aspect-ratio: 1/1;
+  border: 1px solid var(--secondary);
+}
 
 .keypad {
   display: grid;
@@ -78,8 +92,22 @@ button:hover {
     "j x x" 1fr / 1fr 1fr 1fr;
 
   gap: 8px;
+  margin: 0 auto;
+  width: clamp(180px, 10vmin, 280px);
+
+  font-size: xx-large;
+}
+
+.keypad .key {
+  aspect-ratio: 1/1;
+  width: 100%;
+  height: auto;
+
+  font-size: 2rem;
+  padding: 1px;
 }
 
 .keypad .key.delete {
+  aspect-ratio: auto;
   grid-column: span 2;
 }
