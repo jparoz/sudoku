@@ -72,4 +72,22 @@ export class Grid {
       }
     }
   }
+
+  // Renders the grid into the given HTML element
+  render(gridElement: HTMLElement): void {
+    gridElement.innerHTML = ""; // clear
+
+    gridElement.style.display = "grid";
+    gridElement.style.gridTemplateColumns = `repeat(${this.width}, 1fr)`;
+    gridElement.style.gridTemplateRows = `repeat(${this.height}, 1fr)`;
+
+    for (let col = 0; col < this.width; col++) {
+      for (let row = 0; row < this.height; row++) {
+        const cell = document.createElement("div");
+        cell.className = "cell";
+        cell.textContent = `${row}, ${col}`;
+        gridElement.appendChild(cell);
+      }
+    }
+  }
 }
