@@ -1,14 +1,33 @@
 import { Cell } from "./cell.ts";
 
 export class Grid {
+  private readonly element: HTMLElement;
   public readonly width: number;
   public readonly height: number;
   private cells: Cell[][];
 
-  constructor(width: number, height: number) {
+  constructor(element: HTMLElement, width: number, height: number) {
+    this.element = element;
     this.width = width;
     this.height = height;
     this.cells = this.initialiseCells();
+
+    // Disable context menu on the grid element
+    this.element.addEventListener("contextmenu", (event) => {
+      event.preventDefault();
+    });
+
+    this.element.addEventListener("mousedown", (event) => {
+      if (event.button === 0) {
+        // left mouse
+      } else if (event.button === 1) {
+        // middle mouse
+      } else if (event.button === 2) {
+        // right mouse
+      }
+    });
+
+    this.render(this.element); // TODO: do this somewhere else
   }
 
   private initialiseCells(): Cell[][] {

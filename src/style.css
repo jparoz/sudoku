@@ -70,6 +70,7 @@ button:hover {
   place-items: center;
   justify-content: center;
   gap: 16px;
+  user-select: none;
 }
 
 .grid {
