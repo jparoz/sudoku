@@ -1,23 +1,33 @@
 import { Cell } from "./cell.ts";
 
 export class Grid {
-  private readonly element: HTMLElement;
   public readonly width: number;
   public readonly height: number;
   private cells: Cell[][];
 
-  constructor(element: HTMLElement, width: number, height: number) {
-    this.element = element;
+  private readonly gameElement: HTMLElement;
+  private readonly gridElement: HTMLElement;
+  private readonly selectionElement: HTMLElement;
+  private readonly featuresElement: HTMLElement;
+  private readonly coloursElement: HTMLElement;
+
+  constructor(gameElement: HTMLElement, width: number, height: number) {
     this.width = width;
     this.height = height;
     this.cells = this.initialiseCells();
 
+    this.gameElement = gameElement;
+    this.gridElement = gameElement.querySelector(".grid")!;
+    this.selectionElement = gameElement.querySelector(".selection")!;
+    this.featuresElement = gameElement.querySelector(".features")!;
+    this.coloursElement = gameElement.querySelector(".colours")!;
+
     // Disable context menu on the grid element
-    this.element.addEventListener("contextmenu", (event) => {
+    this.gameElement.addEventListener("contextmenu", (event) => {
       event.preventDefault();
     });
 
-    this.element.addEventListener("mousedown", (event) => {
+    this.gameElement.addEventListener("mousedown", (event) => {
       if (event.button === 0) {
         // left mouse
       } else if (event.button === 1) {
@@ -27,7 +37,7 @@ export class Grid {
       }
     });
 
-    this.render(this.element); // TODO: do this somewhere else
+    this.render(); // TODO: do this somewhere else
   }
 
   private initialiseCells(): Cell[][] {
@@ -93,19 +103,31 @@ export class Grid {
   }
 
   // Renders the grid into the given HTML element
-  render(gridElement: HTMLElement): void {
-    gridElement.innerHTML = ""; // clear
+  render(): void {
+    this.gridElement.innerHTML = ""; // clear
 
-    gridElement.style.display = "grid";
-    gridElement.style.gridTemplateColumns = `repeat(${this.width}, 1fr)`;
-    gridElement.style.gridTemplateRows = `repeat(${this.height}, 1fr)`;
+    this.gridElement.style.display = "grid";
+    this.gridElement.style.gridTemplateColumns = `repeat(${this.width}, 1fr)`;
+    this.gridElement.style.gridTemplateRows = `repeat(${this.height}, 1fr)`;
+
+    this.coloursElement.innerHTML = ""; // clear
+    this.coloursElement.style.display = "grid";
+    this.coloursElement.style.gridTemplateColumns = `repeat(${this.width}, 1fr)`;
+    this.coloursElement.style.gridTemplateRows = `repeat(${this.height}, 1fr)`;
 
     for (let col = 0; col < this.width; col++) {
       for (let row = 0; row < this.height; row++) {
         const cell = document.createElement("div");
         cell.className = "cell";
         cell.textContent = `${row}, ${col}`;
-        gridElement.appendChild(cell);
+        this.gridElement.appendChild(cell);
+
+        const colour = document.createElement("div");
+        // Debug colours
+        const red = (255 * row) / this.height;
+        const green = (255 * col) / this.width;
+        colour.style.backgroundColor = `rgba(${red}, ${green}, 0, 0.5)`;
+        this.coloursElement.appendChild(colour);
       }
     }
   }

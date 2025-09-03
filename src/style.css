@@ -64,17 +64,22 @@ button:hover {
   margin-left: auto;
 }
 
-.game {
+.body {
   display: flex;
   flex: 1;
   place-items: center;
   justify-content: center;
   gap: 16px;
+}
+
+.game {
   user-select: none;
+  position: relative;
 }
 
 .grid {
   display: grid;
+  position: relative;
   width: auto;
   height: auto;
 }
@@ -82,6 +87,18 @@ button:hover {
 .grid .cell {
   aspect-ratio: 1/1;
   border: 1px solid var(--secondary);
+}
+
+/* overlay/backgrounds to the grid */
+.selection,
+.features,
+.colours {
+  position: absolute;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .keypad {

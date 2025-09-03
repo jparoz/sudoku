@@ -27,4 +27,4 @@ import { Grid } from "./grid.ts";
   });
 }
 
-let grid = new Grid(document.querySelector(".grid")!, 9, 9);
+let grid = new Grid(document.querySelector(".game")!, 9, 9);
