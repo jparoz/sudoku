@@ -7,8 +7,8 @@ export class Grid {
 
   private readonly gameElement: HTMLElement;
   private readonly gridElement: HTMLElement;
-  private readonly selectionElement: HTMLElement;
-  private readonly featuresElement: HTMLElement;
+  // private readonly selectionElement: HTMLElement;
+  // private readonly featuresElement: HTMLElement;
   private readonly coloursElement: HTMLElement;
 
   constructor(gameElement: HTMLElement, width: number, height: number) {
@@ -18,8 +18,8 @@ export class Grid {
 
     this.gameElement = gameElement;
     this.gridElement = gameElement.querySelector(".grid")!;
-    this.selectionElement = gameElement.querySelector(".selection")!;
-    this.featuresElement = gameElement.querySelector(".features")!;
+    // this.selectionElement = gameElement.querySelector(".selection")!;
+    // this.featuresElement = gameElement.querySelector(".features")!;
     this.coloursElement = gameElement.querySelector(".colours")!;
 
     // Disable context menu on the grid element
@@ -36,8 +36,6 @@ export class Grid {
         // right mouse
       }
     });
-
-    this.render(); // TODO: do this somewhere else
   }
 
   private initialiseCells(): Cell[][] {

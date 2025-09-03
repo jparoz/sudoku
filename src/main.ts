@@ -28,3 +28,4 @@ import { Grid } from "./grid.ts";
 }
 
 let grid = new Grid(document.querySelector(".game")!, 9, 9);
+grid.render();
