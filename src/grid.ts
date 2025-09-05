@@ -1,24 +1,33 @@
-import { Cell } from "./cell.ts";
+import { Cell, CellIndex, getCellIndex } from "./cell.ts";
+import { Selection } from "./selection.ts";
 
 export class Grid {
   public readonly width: number;
   public readonly height: number;
   private cells: Cell[][];
 
+  private selection: Selection;
+
   private readonly gameElement: HTMLElement;
   private readonly gridElement: HTMLElement;
-  // private readonly selectionElement: HTMLElement;
   // private readonly featuresElement: HTMLElement;
   private readonly coloursElement: HTMLElement;
 
   constructor(gameElement: HTMLElement, width: number, height: number) {
     this.width = width;
     this.height = height;
+
     this.cells = this.initialiseCells();
+
+    const selectionElement = gameElement.querySelector(".selection")!;
+    this.selection = new Selection(
+      selectionElement as HTMLElement,
+      width,
+      height,
+    );
 
     this.gameElement = gameElement;
     this.gridElement = gameElement.querySelector(".grid")!;
-    // this.selectionElement = gameElement.querySelector(".selection")!;
     // this.featuresElement = gameElement.querySelector(".features")!;
     this.coloursElement = gameElement.querySelector(".colours")!;
 
@@ -27,15 +36,28 @@ export class Grid {
       event.preventDefault();
     });
 
-    this.gameElement.addEventListener("mousedown", (event) => {
+    this.gameElement.addEventListener("pointerdown", (event) => {
+      if (!(event.target instanceof HTMLElement)) return;
+
       if (event.button === 0) {
         // left mouse
+        this.startSelection(
+          event.button,
+          CellIndex(
+            Number(event.target.dataset.row),
+            Number(event.target.dataset.col),
+          ),
+        );
       } else if (event.button === 1) {
         // middle mouse
+        // TODO: add to selection?
       } else if (event.button === 2) {
         // right mouse
+        // TODO: remove from selection?
       }
     });
+
+    // TODO: watch for "pointerdown" events outside the grid, to deselect
   }
 
   private initialiseCells(): Cell[][] {
@@ -43,7 +65,7 @@ export class Grid {
     for (let row = 0; row < this.height; row++) {
       grid[row] = [];
       for (let col = 0; col < this.width; col++) {
-        const cell = new Cell();
+        const cell = new Cell(row, col);
 
         // Debug value
         cell.value = `${row}, ${col}`;
@@ -110,11 +132,51 @@ export class Grid {
     }
   }
 
+  *forEachCell(cells: Iterable<CellIndex>): Generator<Cell> {
+    for (const index of cells) {
+      const { row, col } = getCellIndex(index);
+      yield this.cells[row][col];
+    }
+  }
+
   // Clear all modifiable cells in the grid
   clearAll(): void {
     for (const cell of this.eachCell()) {
       cell.clear();
     }
+  }
+
+  // Starts a new selection, starting in the given cell
+  startSelection(mouseButton: number, cell: CellIndex): void {
+    this.selection.clear();
+    this.selection.select(cell);
+
+    this.selection.render();
+
+    const move = (event: PointerEvent): void => {
+      if (!(event.target instanceof HTMLElement)) return;
+      if (!(event.target.dataset.row && event.target.dataset.col)) return;
+
+      const cell = CellIndex(
+        Number(event.target.dataset.row),
+        Number(event.target.dataset.col),
+      );
+
+      // TODO: fine-tune the hotzone to select another cell
+      this.selection.select(cell);
+      this.selection.render();
+    };
+
+    const up = (event: PointerEvent): void => {
+      if (!(event.target instanceof HTMLElement)) return;
+      if (event.button !== mouseButton) return;
+
+      document.removeEventListener("pointermove", move);
+      document.removeEventListener("pointerup", up);
+    };
+
+    document.addEventListener("pointermove", move);
+    document.addEventListener("pointerup", up);
   }
 
   // Renders the grid into the given HTML element
@@ -134,5 +196,7 @@ export class Grid {
       this.gridElement.appendChild(cell.render());
       this.coloursElement.appendChild(cell.renderColours());
     }
+
+    this.selection.render();
   }
 }

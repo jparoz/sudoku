@@ -1,11 +1,20 @@
 export class Cell {
+  public readonly row: number;
+  public readonly col: number;
   public value: string;
   public readonly modifiable: boolean;
   public centreMarks: Annotations;
   public cornerMarks: Annotations;
   public colours: Annotations;
 
-  constructor(value: string = "", modifiable: boolean = true) {
+  constructor(
+    row: number,
+    col: number,
+    value: string = "",
+    modifiable: boolean = true,
+  ) {
+    this.row = row;
+    this.col = col;
     this.value = value;
     this.modifiable = modifiable;
     this.centreMarks = new Annotations();
@@ -25,6 +34,11 @@ export class Cell {
   render(): HTMLElement {
     const cell = document.createElement("div");
     cell.className = "cell";
+
+    // Store the cell coordinates in data attributes
+    cell.dataset.row = String(this.row);
+    cell.dataset.col = String(this.col);
+
     if (this.value !== "") {
       cell.textContent = this.value;
     } else {
@@ -75,4 +89,11 @@ export class Annotations {
   }
 }
 
-export type CellIndex = { row: number; col: number };
+export type CellIndex = string & { __brand: "CellIndex" };
+export function CellIndex(row: number, col: number): CellIndex {
+  return `${row},${col}` as CellIndex;
+}
+export function getCellIndex(index: CellIndex): { row: number; col: number } {
+  const [row, col] = index.split(",").map(Number);
+  return { row, col };
+}
