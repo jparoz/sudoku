@@ -43,7 +43,17 @@ export class Grid {
     for (let row = 0; row < this.height; row++) {
       grid[row] = [];
       for (let col = 0; col < this.width; col++) {
-        grid[row][col] = new Cell();
+        const cell = new Cell();
+
+        // Debug value
+        cell.value = `${row}, ${col}`;
+
+        // Debug colours
+        const red = (255 * row) / this.height;
+        const green = (255 * col) / this.width;
+        cell.colours.add(`rgba(${red}, ${green}, 0, 0.5)`);
+
+        grid[row][col] = cell;
       }
     }
     return grid;
@@ -115,17 +125,9 @@ export class Grid {
 
     for (let col = 0; col < this.width; col++) {
       for (let row = 0; row < this.height; row++) {
-        const cell = document.createElement("div");
-        cell.className = "cell";
-        cell.textContent = `${row}, ${col}`;
-        this.gridElement.appendChild(cell);
-
-        const colour = document.createElement("div");
-        // Debug colours
-        const red = (255 * row) / this.height;
-        const green = (255 * col) / this.width;
-        colour.style.backgroundColor = `rgba(${red}, ${green}, 0, 0.5)`;
-        this.coloursElement.appendChild(colour);
+        const cell = this.cells[row][col];
+        this.gridElement.appendChild(cell.render());
+        this.coloursElement.appendChild(cell.renderColours());
       }
     }
   }

@@ -21,10 +21,38 @@ export class Cell {
     this.cornerMarks.clear();
     this.colours.clear();
   }
+
+  render(): HTMLElement {
+    const cell = document.createElement("div");
+    cell.className = "cell";
+    if (this.value !== "") {
+      cell.textContent = this.value;
+    } else {
+      // TODO: display centre/corner marks
+    }
+    return cell;
+  }
+
+  renderColours(): HTMLElement {
+    const colour = document.createElement("div");
+    if (!this.colours.isEmpty()) {
+      // TODO: render all the colours together somehow, not just the first.
+      colour.style.backgroundColor = `${this.colours.get()[0]}`;
+    }
+    return colour;
+  }
 }
 
 export class Annotations {
   private marks: Set<string> = new Set();
+
+  add(mark: string): void {
+    this.marks.add(mark);
+  }
+
+  delete(mark: string): boolean {
+    return this.marks.delete(mark);
+  }
 
   toggle(mark: string): void {
     if (this.marks.has(mark)) {
@@ -46,3 +74,5 @@ export class Annotations {
     return this.marks.size === 0;
   }
 }
+
+export type CellIndex = { row: number; col: number };
