@@ -101,12 +101,19 @@ export class Grid {
     return this.cells.flat();
   }
 
-  // Clear all modifiable cells in the grid
-  clearAll(): void {
+  // Get all cells as a generator
+  *eachCell(): Generator<Cell> {
     for (let row = 0; row < this.height; row++) {
       for (let col = 0; col < this.width; col++) {
-        this.cells[row][col].clear();
+        yield this.cells[row][col];
       }
+    }
+  }
+
+  // Clear all modifiable cells in the grid
+  clearAll(): void {
+    for (const cell of this.eachCell()) {
+      cell.clear();
     }
   }
 
@@ -123,12 +130,9 @@ export class Grid {
     this.coloursElement.style.gridTemplateColumns = `repeat(${this.width}, 1fr)`;
     this.coloursElement.style.gridTemplateRows = `repeat(${this.height}, 1fr)`;
 
-    for (let col = 0; col < this.width; col++) {
-      for (let row = 0; row < this.height; row++) {
-        const cell = this.cells[row][col];
-        this.gridElement.appendChild(cell.render());
-        this.coloursElement.appendChild(cell.renderColours());
-      }
+    for (const cell of this.eachCell()) {
+      this.gridElement.appendChild(cell.render());
+      this.coloursElement.appendChild(cell.renderColours());
     }
   }
 }
